@@ -1,0 +1,14 @@
+<div class="feed">
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <label>Username:</label>
+    <input type="email" formControlName="email" class="login-input">
+    <br><br>
+    <label>Password:</label>
+    <input type="password" formControlName="password" class="login-input">
+    <br><br>
+    <button type="submit" class="mat-fab">Login</button>
+  </form>
+  
+  <p>Don't have an account? <a routerLink="">Register</a></p>
+</div>

@@ -1,0 +1,67 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav class="sidenav" mode="push">
+    <div class="logout-button-container">
+      <button mat-button class="logout-button" color="primary" (click)="logout()">Logout</button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="feed">
+      <div class="feed-header">
+        <mat-icon class="menu-icon" (click)="sidenav.toggle()">menu</mat-icon>
+        <h2>Micro-Blogging App</h2>
+      </div>
+    <div class="post">
+      <div class="post-header">
+        <h3>Post New Entry</h3>
+      </div>
+      <div class="post">
+        <button mat-raised-button color="primary" (click)="toggleNewPostForm()">New Post</button>
+        <div *ngIf="showNewPostForm" class="new-post">
+          <form [formGroup]="newPostForm">
+            <textarea matInput class="comment-input" formControlName="content" placeholder="Enter your content..."></textarea>
+            <input type="file" (change)="handleImageInput($event)" formControlName="image">
+
+            <button mat-button color="primary" (click)="createNewPost()" [disabled]="newPostForm.invalid">Post</button>
+          </form>
+        </div>
+      </div>
+      <div *ngFor="let post of posts" class="post">
+        <div class="post-header">
+          <h3>{{ post.username }}</h3>
+          <button mat-icon-button [matMenuTriggerFor]="postMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #postMenu="matMenu">
+            <button mat-menu-item (click)="deletePost(post.id)">Delete</button>
+          </mat-menu>
+        </div>
+        <p>{{ post.content }}</p>
+        <img *ngIf="post.image" [src]="post.image" alt="Post Image" class="post-image">
+        <div class="button-container">
+          <button mat-icon-button color="primary" [ngClass]="{'liked': post.isLiked}" (click)="toggleLike(post)">
+            <mat-icon>{{ post.isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="focusCommentInput(commentInput)">
+            <mat-icon>comment</mat-icon>
+          </button>
+        </div>
+        <div class="comment-container">
+          <div class="comment" *ngFor="let comment of post.comments">
+            <div class="comment-header">
+              <strong>{{ comment.username }}</strong>
+            </div>
+            <div class="comment-content">
+              {{ comment.content }}
+            </div>
+          </div>
+          <form [formGroup]="newCommentForm" (ngSubmit)="createNewComment(post.id)">
+            <textarea matInput class="comment-input" formControlName="content" placeholder="Add a comment..."
+              #commentInput></textarea>
+            <button mat-button color="primary" type="submit">Post Comment</button>
+          </form>
+          
+        </div>
+
+      </div>
+    </div>
+    

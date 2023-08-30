@@ -1,0 +1,19 @@
+<div class="feed">
+  <h2>Registration</h2>
+  <form [formGroup]="registrationForm" (ngSubmit)="register()" class="registration-form">
+    <label for="email">Email:</label>
+    <input type="email" id="email" formControlName="email" class="registration-input"><br><br>
+    
+    <label for="username">Username:</label>
+    <input type="text" id="username" formControlName="username" class="registration-input"><br><br>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" formControlName="password" class="registration-input"><br><br>
+    
+    <label for="re_password">Confirm Password:</label>
+    <input type="password" id="re_password" formControlName="re_password" class="registration-input"><br><br>
+    
+    <button type="submit" [disabled]="registrationForm.invalid" class="mat-fab">Register</button>
+  </form>
+  <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+</div>
