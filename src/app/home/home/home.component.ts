@@ -15,6 +15,9 @@ export class HomeComponent implements OnInit {
   newPostImage: File | null = null;
   showNewPostForm: boolean = false;
   currentUser: any;
+  showEditPostForm = false;
+  editedPostId: number | null = null;
+  editForm: FormGroup;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private apiService: ApiService, private router: Router) {
     this.newPostForm = this.fb.group({
@@ -23,6 +26,9 @@ export class HomeComponent implements OnInit {
     });
     this.newCommentForm = this.fb.group({
       content: ['', Validators.required]
+    });
+    this.editForm = this.fb.group({
+      editedPostContent: ['', Validators.required]
     });
   }
   ngOnInit(): void {
@@ -151,5 +157,31 @@ export class HomeComponent implements OnInit {
 
     sessionStorage.removeItem('access_token');
     this.router.navigate(['/login']);
+  }
+
+
+  toggleEditPostForm(post: any) {
+    this.showEditPostForm = !this.showEditPostForm;
+    this.editedPostId = post.id;
+  }
+
+  editPost(post: any) {
+    this.toggleEditPostForm(post);
+  }
+
+  updatePost() {
+    const content = this.editForm.get('editedPostContent')?.value;
+    if (this.editedPostId) {
+      this.apiService.updatePost(this.editedPostId, content).subscribe(
+        response => {
+         location.reload();
+        },
+        error => {
+          // Handle error
+        }
+      );
+      this.showEditPostForm = false;
+      this.editedPostId = null;
+    }
   }
 }

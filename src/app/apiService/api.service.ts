@@ -87,4 +87,11 @@ export class ApiService {
     });
     return this.http.get(`${this.baseUrl}auth/me/`,{headers:headers});
   }
+  updatePost(postId: number, content: string) {
+    const postData = {
+      content: content
+    };
+  
+    return this.http.patch<any>(`${this.baseUrl}rest/posts/${postId}/`, postData);
+  }
 }

@@ -8,7 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MaterialModule } from 'src/app/material/material.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSidenavModule } from '@angular/material/sidenav';
 @NgModule({
   declarations: [
@@ -22,7 +22,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatIconModule,
     MatMenuModule,
     ReactiveFormsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    FormsModule
   ]
 })
 export class HomeModule { }
