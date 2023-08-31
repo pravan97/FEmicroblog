@@ -55,7 +55,6 @@ export class ApiService {
       user: postUser, 
       post: postId
     };
-    console.log(commentData);
 
     return this.http.post<any>(`${this.baseUrl}rest/likes/`, commentData);
   }
@@ -74,7 +73,7 @@ export class ApiService {
     const body = {
       password: password,
       username: email
-    };    console.log(body)
+    };   
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });

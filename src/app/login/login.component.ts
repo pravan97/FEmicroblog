@@ -28,7 +28,6 @@ export class LoginComponent {
     this.apiService.login(this.loginForm.get('password')?.value, this.loginForm.get('email')?.value)
       .subscribe(
         (response:any) => {
-          console.log(response)
           sessionStorage.setItem('access_token',response.access)
           this.router.navigate(['/home']);
         },

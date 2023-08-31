@@ -13,10 +13,10 @@ export class HomeComponent implements OnInit {
   newPostForm: FormGroup;
   newCommentForm: FormGroup;
   newPostImage: File | null = null;
-  showNewPostForm: boolean = false; 
-  currentUser : any;
+  showNewPostForm: boolean = false;
+  currentUser: any;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private apiService:ApiService, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private apiService: ApiService, private router: Router) {
     this.newPostForm = this.fb.group({
       content: ['', Validators.required],
       image: [null]
@@ -27,20 +27,18 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit(): void {
     this.apiService.getPosts().subscribe((data: any[]) => {
-      console.log(data);
       this.posts = data;
       this.posts.reverse()
     },
-    (error) => {
-      console.error("Error fetching posts:", error);
-    });
+      (error) => {
+        console.error("Error fetching posts:", error);
+      });
     this.apiService.getUser().subscribe((data: any) => {
       this.currentUser = data;
-      console.log(data)
     },
-    (error) => {
-      console.error("Error fetching posts:", error);
-    });
+      (error) => {
+        console.error("Error fetching posts:", error);
+      });
     this.fetchPostsAndComments();
   }
 
@@ -52,21 +50,21 @@ export class HomeComponent implements OnInit {
       this.posts.forEach((post) => {
         this.apiService.getUsersForPost(post.user).subscribe((users: any[]) => {
           const user = users.find(user => user.id === post.user);
-          post.username = user ? user.username : ''; 
+          post.username = user ? user.username : '';
         });
         this.apiService.getCommentsForPost(post.id).subscribe((comments: any[]) => {
           comments.forEach((comment) => {
             this.apiService.getUsersForPost(comment.user).subscribe((users: any[]) => {
               const user = users.find(user => user.id === comment.user);
-              comment.username = user ? user.username : ''; 
+              comment.username = user ? user.username : '';
             });
           });
-          
+
           post.comments = comments;
         });
         this.apiService.getLikesForPost(post.id).subscribe((likes: any[]) => {
 
-          const currentUserLike = likes.find(like => like.user === this.currentUser.id); 
+          const currentUserLike = likes.find(like => like.user === this.currentUser.id);
 
           post.isLiked = !!currentUserLike;;
 
@@ -88,33 +86,32 @@ export class HomeComponent implements OnInit {
   focusCommentInput(commentInput: HTMLTextAreaElement) {
     commentInput.focus();
   }
-//-----------------------------
+  //-----------------------------
   createNewPost() {
     const content = this.newPostForm.get('content')?.value;
-    const userId = this.currentUser.id; 
-    console.log('create',userId);
+    const userId = this.currentUser.id;
     this.apiService.newPost(content, this.newPostImage, userId).subscribe(
       (response: any) => {
         const newPost = {
-          id: response.id,  
+          id: response.id,
           content: content,
           image: response.image,
-          user: userId,     
-          username: this.currentUser.username,  
-          comments: [],     
-          isLiked: false    
+          user: userId,
+          username: this.currentUser.username,
+          comments: [],
+          isLiked: false
         };
         this.posts.unshift(newPost);
       })
-      this.newPostForm.reset();
-      this.newPostImage = null;
+    this.newPostForm.reset();
+    this.newPostImage = null;
   }
   createNewComment(postId: number) {
     const content = this.newCommentForm.get('content')?.value;
-    this.apiService.createComment(postId, content,this.currentUser.id).subscribe(
+    this.apiService.createComment(postId, content, this.currentUser.id).subscribe(
       (response: any) => {
         location.reload()
-        
+
       },
       (error: any) => {
         console.log(error);
@@ -122,12 +119,10 @@ export class HomeComponent implements OnInit {
     );
   }
   toggleLike(post: any) {
-    console.log('asadsfd',post);
 
     if (!post.isLiked) {
       this.apiService.createLike(this.currentUser.id, post.id).subscribe(
         (response: any) => {
-          console.log(response)
         },
         (error: any) => {
           console.log(error);
@@ -136,13 +131,13 @@ export class HomeComponent implements OnInit {
     } else {
       this.apiService.removeLike(post.id).subscribe(
         (response: any) => {
-          console.log(response)
         },
         (error: any) => {
           console.log(error);
         }
-      );    }
-    post.isLiked = !post.isLiked; 
+      );
+    }
+    post.isLiked = !post.isLiked;
   }
 
   toggleNewPostForm() {
